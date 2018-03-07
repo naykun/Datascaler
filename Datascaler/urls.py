@@ -16,8 +16,10 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path
-from datascaler_web.views import index
+from datascaler_web.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^index/',index),
+    url(r'^chart/$',chart),
+    url(r'^doc/$',doc)
 ]

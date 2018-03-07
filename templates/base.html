@@ -1,65 +1,67 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
     <title>
-      Do not put label here!
+        Data Scaler
     </title>
     <link rel="stylesheet" href="{% static 'css/semantic.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mapbox-gl.css' %}">
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/semantic.js' %}"></script>
-    <script src="{% static 'js/exporting.js' %}"></script>
-    <script src="{% static 'js/highcharts.js' %}"></script>
-    <script src="{% static 'js/highcharts-more.js' %}"></script>
+{#    <script src="{% static 'js/exporting.js' %}"></script>#}
+{#    <script src="{% static 'js/highcharts.js' %}"></script>#}
+{#    <script src="{% static 'js/highcharts-more.js' %}"></script>#}
     <script src="{% static 'js/echarts.min.js' %}"></script>
+    <script src="{% static 'js/echarts-gl.min.js' %}"></script>
+    <script src="{% static 'js/mapbox-gl.js' %}"></script>
+</head>
 
-  </head>
-
-  <body>
-    <div class="ui thin visible left sidebar inverted vertical menu">
-      <div class="header item">
-        <img src="{% static 'images/logo.png' %}">
-      </div>
-      <div class="item">
-        Doucument
+<body>
+<div class="ui thin visible left sidebar inverted vertical menu">
+    <div class="header item">
+        <img src="{% static 'images/logo.png' %}" style="cursor: pointer;" onclick="window.open('/index','_self')">
+    </div>
+    <div class="item">
+        <a href="/doc">Document</a>
         <i class="browser icon"></i>
-      </div>
-      <div class="item">
-        Charts
+    </div>
+    <div class="item" >
+        <a href="/chart" >Charts</a>
         <i class="bar chart icon"></i>
-      </div>
-      <div class="item">
+    </div>
+    <div class="item">
         Others
         <i class="idea icon"></i>
-      </div>
     </div>
+</div>
 
-    <div class="pusher">
-      <div class="ui menu">
+<div class="pusher">
+    <div class="ui menu">
         <div class="header item" id="menu">
-          Menu
-          <i class="content icon"></i>
+            <a href="#">Menu
+                <i class="content icon"></i></a>
         </div>
         <div class="item">
-          About us
+            About us
         </div>
         <div class="item">
-          Location
+            Location
         </div>
         <div class="item">
-          Others
+            Others
         </div>
-      </div>
-
-      {% block grid %}{% endblock %}
     </div>
-    <script>
-    $('#menu').click(function () {
-      $('.ui.sidebar').sidebar('toggle');
-    });
-    </script>
-  {% block chartjs %}{% endblock %}
 
-  </body>
+    {% block grid %}{% endblock %}
+</div>
+<script>
+    $('#menu').click(function () {
+        $('.ui.sidebar').sidebar('toggle');
+    });
+</script>
+{% block chartjs %}{% endblock %}
+
+</body>
 </html>

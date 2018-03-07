@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block grid %}
+    <div class="one column grid" style="margin:5px 0 5px 0;">
+        <div class="column">
+            <div class="ui segment"  id="chart" style="margin:0 5px 0 40px;width: 1250px;height: 690px" ></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block chartjs %}
+<script type="text/javascript">
+    mapboxgl.accessToken ='pk.eyJ1IjoiY2l0eXdhbmRlciIsImEiOiJjamE4ODM2YjQwNDB5MzNwY2hvanV2eDhiIn0.QCJ3-UnEddwCuxg8uvhLcQ';
+    var myChart = echarts.init(document.getElementById('chart'));
+    myChart.setOption({
+        mapbox: {
+            center: [116.402030, 39.937034],
+            zoom: 9,
+            style: 'mapbox://styles/citywander/cje6hjeijgd862sscrg4its0r'
+        }
+    });
+</script>
+
+
+{% endblock %}
