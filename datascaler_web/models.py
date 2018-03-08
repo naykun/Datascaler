@@ -1,57 +1,55 @@
-from django.db import models
 from mongoengine import *
 # Create your models here.
 
 class DataInfo(Document):
-    des = StringField()
-    
-class city(models.Model):
-    city_id=models.IntegerField(default= 0)
-    name_chinese=models.CharField(max_length=20)
-    name_english=models.CharField(max_length=20)
-    latitude=models.DecimalField(max_digits=20, decimal_places=8)
-    longitude=models.DecimalField(max_digits=20, decimal_places=8)
-    cluster_id=models.IntegerField(default= 0)
-class airq(models.Model):
-    station_id=models.IntegerField(default= 0)
-    time=models.DateTimeField(auto_now_add=True)
-    PM25_Concentration=models.IntegerField(default= 0)
-    PM10_Concentration=models.DecimalField(max_digits=5, decimal_places=3)
-    NO2_Concentration=models.DecimalField(max_digits=5, decimal_places=3)
-    CO_Concentration=models.DecimalField(max_digits=5, decimal_places=3)
-    O3_Concentration=models.DecimalField(max_digits=5, decimal_places=3)
-    SO2_Concentration=models.DecimalField(max_digits=5, decimal_places=3)
-class district(models.Model):
-    district_id=models.IntegerField(default= 0)
-    name_chinese=models.CharField(max_length=20)
-    ame_english=models.CharField(max_length=20)
-    city_id=models.IntegerField(default= 0)
-class meteorology(models.Model):
-    idx=models.IntegerField(default= 0)
-    time=models.DateTimeField(auto_now_add=True)
-    weather=models.IntegerField(default= 0)
-    temperature=models.DecimalField(max_digits=5, decimal_places=3)
-    pressure=models.DecimalField(max_digits=5, decimal_places=3)
-    humidity=models.IntegerField(default= 0)
-    wind_speed=models.DecimalField(max_digits=5, decimal_places=3)
-    wind_direction=models.IntegerField(default= 0)
-class station(models.Model):
-    station_id=models.IntegerField(default= 0)
-    name_chinese=models.CharField(max_length=20)
-    name_english=models.CharField(max_length=20)
-    latitude=models.DecimalField(max_digits=20, decimal_places=8)
-    longitude=models.DecimalField(max_digits=20, decimal_places=8)
-    district_id=models.IntegerField(default= 0)
-class weatherforecast(models.Model):
-    idx=models.IntegerField(default= 0)
-    time_forecast=models.DateTimeField(auto_now_add=True)
-    time_future=models.DateTimeField(auto_now_add=True)
-    frequent=models.IntegerField(default= 0)
-    weather=models.IntegerField(default= 0)
-    up_temperature=models.IntegerField(default= 0)
-    bottom_temperature=models.IntegerField(default= 0)
-    wind_level=models.IntegerField(default= 0)
-    wind_direction=models.IntegerField(default= 0)
+    des = StringField(null=True)
+class city(Document):
+    city_id=IntField(null=True)
+    name_chinese=StringField(null=True)
+    name_english=StringField(null=True)
+    latitude=FloatField(null=True)
+    longitude=FloatField(null=True)
+    cluster_id=IntField(null=True)
+class airquality(Document):
+    station_id=IntField(null=True)
+    time=DateTimeField(null=True)
+    PM25_Concentration=IntField(null=True)
+    PM10_Concentration=FloatField(null=True)
+    NO2_Concentration=FloatField(null=True)
+    CO_Concentration=FloatField(null=True)
+    O3_Concentration=FloatField(null=True)
+    SO2_Concentration=FloatField(null=True)
+class district(Document):
+    district_id=IntField(null=True)
+    name_chinese=StringField(null=True)
+    ame_english=StringField(null=True)
+    city_id=IntField(null=True)
+class meteorology(Document):
+    idx=IntField(null=True)
+    time=DateTimeField(null=True)
+    weather=IntField(null=True)
+    temperature=FloatField(null=True)
+    pressure=FloatField(null=True)
+    humidity=FloatField(null=True)
+    wind_speed=FloatField(null=True)
+    wind_direction=IntField(null=True)
+class station(Document):
+    station_id=IntField(null=True)
+    name_chinese=StringField(null=True)
+    name_english=StringField(null=True)
+    latitude=FloatField(null=True)
+    longitude=FloatField(null=True)
+    district_id=IntField(null=True)
+class weatherforecast(Document):
+    idx=IntField(null=True)
+    time_forecast=DateTimeField(null=True)
+    time_future=DateTimeField(null=True)
+    frequent=IntField(null=True)
+    weather=IntField(null=True)
+    up_temperature=FloatField(null=True)
+    bottom_temperature=FloatField(null=True)
+    wind_level=FloatField(null=True)
+    wind_direction=IntField(null=True)
 
 
     
