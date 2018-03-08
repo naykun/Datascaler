@@ -26,7 +26,6 @@ SECRET_KEY = 'rez^833(&%=$-rxd8+5g(84mjs_0h5p6+-ysc=jp+*tbbr9^&m'
 DEBUG = True
 
 ALLOWED_HOSTS = [
- '10.17.151.49'
 ]
 
 

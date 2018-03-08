@@ -7,7 +7,7 @@ city.csv      meteorology.csv    station.csv
 Usage:
 util.py path_to_data
 
-数据很大 很慢
+数据很大 很慢 大概一个多小时吧
 """
 ['004', '深圳', 'ShenZhen', '22.543099', '114.057868', '2']
 import csv
@@ -40,7 +40,7 @@ def init_load(path):
     next(file)
     for item in file:
         item=[None if i=="NULL" else i for i in item]
-        print(item)
+        #print(item)
         load_mete_item(item)
     print("ok")
     file=csv.reader(open("weatherforecast.csv","r"))
