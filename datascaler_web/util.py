@@ -5,8 +5,14 @@ airquality.csv  district.csv      weatherforecast.csv
 city.csv      meteorology.csv    station.csv
 
 Usage:
-util.py path_to_data
-数据很大 很慢 大概20分钟
+util.py (path_to_data)
+load data
+
+util.py (-d)
+delete all data
+
+加载操作 大概20分钟
+清空操作 大概2分钟
 """
 ['004', '深圳', 'ShenZhen', '22.543099', '114.057868', '2']
 import csv
@@ -109,9 +115,22 @@ def init_load(path):
 
 def main(path):
     init_load(path)
-    
+def delete_data():
+    sum=0
+    sum+=city.objects().delete()
+    sum+=meteorology.objects().delete()
+    sum+=airquality.objects().delete()
+    sum+=station.objects().delete()
+    sum+=weatherforecast.objects().delete()
+    sum+=district.objects().delete()
+    print("all {} items deleted".format(sum))
+
+
 if __name__=="__main__":
-    main(sys.argv[1])
+    if(sys.argv[1]=="-d"):
+        delete_data()
+    else:
+        main(sys.argv[1])
      
                    
     
