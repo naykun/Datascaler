@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^index/',index),
     url(r'^chart/$',chart),
-    url(r'^doc/$',doc)
+    url(r'^doc/$',doc),
+    url(r'^air/',air),
 ]
