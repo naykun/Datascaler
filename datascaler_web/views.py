@@ -11,7 +11,7 @@ def doc(request):
     return render(request,"doc.html")
 def air(request):
     air_date=request.GET.get("time")
-    sta_id=request.GET.get("station")
+    sta_id=int(request.GET.get("station"))
     try :
         item=airquality.objects(time=air_date,station_id=sta_id)[0]
         info=json.loads(item.to_json())
