@@ -11,13 +11,265 @@
 <script type="text/javascript">
     mapboxgl.accessToken ='pk.eyJ1IjoiY2l0eXdhbmRlciIsImEiOiJjamE4ODM2YjQwNDB5MzNwY2hvanV2eDhiIn0.QCJ3-UnEddwCuxg8uvhLcQ';
     var myChart = echarts.init(document.getElementById('chart'));
-    myChart.setOption({
-        mapbox: {
-            center: [116.402030, 39.937034],
-            zoom: 9,
-            style: 'mapbox://styles/citywander/cje6hjeijgd862sscrg4its0r'
+
+    var data=[];
+
+    var time=new Date(2014,4,1,8,0,0);
+    
+    $(function(){
+        for (var i=1001;i<=1036;i++){
+            $.get('air/',{'time':time,'station_id':i},
+            function(AirData){
+                if(AirData){
+                    data=Airdata;      
+                }
+            })
         }
     });
+
+    option=null;
+
+    var convertData = function (data,pollution_name) {
+        var res = [];
+        for (var i=0;i<data.length;i++){
+            var value=data[i][pollution_name];
+            if(value){
+                res.push({
+                    name:data[i].name,
+                    value: [data[i]['longitude'],data[i]['latitude'],value]
+                });
+            }
+        }
+        return res;
+    };
+
+    option = {
+        title: {
+            text: '部分城市城区空气质量 - 百度地图',
+            left: 'center'
+        },
+        tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    var res = params.name+'<br/>';
+                    var myseries = option.series;
+                    for (var i = 0; i < myseries.length; i++) {
+                        for(var j=0;j<myseries[i].data.length;j++){
+                            if(myseries[i].data[j].name==params.name){
+                                res+=myseries[i].name +' : '+myseries[i].data[j].value[2]+'</br>';
+                            }
+                        }
+                    }
+                    return res;
+                }
+            },
+        bmap: {
+            center: [116.173553,40.090679],
+            zoom: 9,
+            roam: true,
+            mapStyle: {
+                styleJson: [{
+                    'featureType': 'water',
+                    'elementType': 'all',
+                    'stylers': {
+                        'color': '#d1d1d1'
+                    }
+                }, {
+                    'featureType': 'land',
+                    'elementType': 'all',
+                    'stylers': {
+                        'color': '#f3f3f3'
+                    }
+                }, {
+                    'featureType': 'railway',
+                    'elementType': 'all',
+                    'stylers': {
+                        'visibility': 'off'
+                    }
+                }, {
+                    'featureType': 'highway',
+                    'elementType': 'all',
+                    'stylers': {
+                        'color': '#fdfdfd'
+                    }
+                }, {
+                    'featureType': 'highway',
+                    'elementType': 'labels',
+                    'stylers': {
+                        'visibility': 'off'
+                    }
+                }, {
+                    'featureType': 'arterial',
+                    'elementType': 'geometry',
+                    'stylers': {
+                        'color': '#fefefe'
+                    }
+                }, {
+                    'featureType': 'arterial',
+                    'elementType': 'geometry.fill',
+                    'stylers': {
+                        'color': '#fefefe'
+                    }
+                }, {
+                    'featureType': 'poi',
+                    'elementType': 'all',
+                    'stylers': {
+                        'visibility': 'off'
+                    }
+                }, {
+                    'featureType': 'green',
+                    'elementType': 'all',
+                    'stylers': {
+                        'visibility': 'off'
+                    }
+                }, {
+                    'featureType': 'subway',
+                    'elementType': 'all',
+                    'stylers': {
+                        'visibility': 'off'
+                    }
+                }, {
+                    'featureType': 'manmade',
+                    'elementType': 'all',
+                    'stylers': {
+                        'color': '#d1d1d1'
+                    }
+                }, {
+                    'featureType': 'local',
+                    'elementType': 'all',
+                    'stylers': {
+                        'color': '#d1d1d1'
+                    }
+                }, {
+                    'featureType': 'arterial',
+                    'elementType': 'labels',
+                    'stylers': {
+                        'visibility': 'off'
+                    }
+                }, {
+                    'featureType': 'boundary',
+                    'elementType': 'all',
+                    'stylers': {
+                        'color': '#fefefe'
+                    }
+                }, {
+                    'featureType': 'building',
+                    'elementType': 'all',
+                    'stylers': {
+                        'color': '#d1d1d1'
+                    }
+                }, {
+                    'featureType': 'label',
+                    'elementType': 'labels.text.fill',
+                    'stylers': {
+                        'color': '#999999'
+                    }
+                }]
+            }
+        },
+        series : [
+            {
+                name: 'PM2.5',
+                type: 'scatter',
+                coordinateSystem: 'bmap',
+                data: convertData(data,'PM25_Concentration'),
+                symbolSize: function (val) {
+                    return 10;
+                },
+                label: {
+                    normal: {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+                        formatter: '{b}',
+                        position: 'right',
+                        show: true
+                    },
+                    emphasis: {
+                        show: true
+                    }
+                },
+                itemStyle: {  
+                    normal: {
+                        color: 'purple'
+                    }
+                }
+            },
+            {
+                name: 'PM10',
+                type: 'scatter',
+                coordinateSystem: 'bmap',
+                data: convertData(data,'PM10_Concentration'),
+                symbolSize: function (val) {
+                    return 0;
+                },
+                itemStyle: {
+                    normal: {
+                        color: 'purple'
+                    }
+                }
+            },
+            {
+                name: 'NO2',
+                type: 'scatter',
+                coordinateSystem: 'bmap',
+                data: convertData(data,'NO2_Concentration'),
+                symbolSize: function (val) {
+                    return 0;
+                },
+                itemStyle: {
+                    normal: {
+                        color: 'purple'
+                    }
+                }
+            },
+            {
+                name: 'CO',
+                type: 'scatter',
+                coordinateSystem: 'bmap',
+                data: convertData(data,'CO_Concentration'),
+                symbolSize: function (val) {
+                    return 0;
+                },
+                itemStyle: {
+                    normal: {
+                        color: 'purple'
+                    }
+                }
+            },
+            {
+                name: 'O3',
+                type: 'scatter',
+                coordinateSystem: 'bmap',
+                data: convertData(data,'O3_Concentration'),
+                symbolSize: function (val) {
+                    return 0;
+                },
+                itemStyle: {
+                    normal: {
+                        color: 'purple'
+                    }
+                }
+            },
+            {
+                name: 'SO2',
+                type: 'scatter',
+                coordinateSystem: 'bmap',
+                data: convertData(data,'SO2_Concentration'),
+                symbolSize: function (val) {
+                    return 0;
+                },
+                itemStyle: {
+                    normal: {
+                        color: 'purple'
+                    }
+                }
+            }
+            
+        ]
+    };;
+
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+   
 </script>
 
 

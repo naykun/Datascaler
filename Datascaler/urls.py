@@ -22,5 +22,5 @@ urlpatterns = [
     url(r'^index/',index),
     url(r'^chart/$',chart),
     url(r'^doc/$',doc),
-    url(r'^air/',air),
+    url(r'^chart/air/',air),
 ]
