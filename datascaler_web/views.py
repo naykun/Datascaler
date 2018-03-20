@@ -15,7 +15,7 @@ def air(request):
     try :
         item=airquality.objects(time=air_date,station_id=sta_id)[0]
         info=json.loads(item.to_json())
-        sta=station.objects(station_id=sta_id)
+        sta=station.objects(station_id=sta_id)[0]
         info2 = json.loads(sta.to_json())
         info['latitude']=info2[0]['latitude']
         info['longitude']=info2[0]['longitude']
