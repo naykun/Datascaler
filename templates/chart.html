@@ -14,19 +14,20 @@
 
     var AirData=[];
 
-    var RequestTime=new Date(2014,4,1,0,0,0);
+    var RequestTime=new Date(2014,5,1,0,0,0);
     
     $.ajax({
         type:'get',
-        url:'/air',
+        url:'air/',
         dataType: 'json',
         async: true,
         data:{
                 time:RequestTime
              },
         success : function (d){
-                    //console.log(d);
-                    AirData=eval('('+d+')');
+                    console.log(d);
+                    //AirData=eval('('+d+')');
+                    AirData=d;
                 }
     })
 
