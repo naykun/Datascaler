@@ -12,20 +12,23 @@
     mapboxgl.accessToken ='pk.eyJ1IjoiY2l0eXdhbmRlciIsImEiOiJjamE4ODM2YjQwNDB5MzNwY2hvanV2eDhiIn0.QCJ3-UnEddwCuxg8uvhLcQ';
     var myChart = echarts.init(document.getElementById('chart'));
 
-    var data=[];
+    var AirData=[];
 
-    var time=new Date(2014,4,1,8,0,0);
+    var RequestTime=new Date(2014,4,1,0,0,0);
     
-    $(function(){
-        for (var i=1001;i<=1036;i++){
-            $.get('air/',{'time':time,'station_id':i},
-            function(AirData){
-                if(AirData){
-                    data=Airdata;      
+    $.ajax({
+        type:'get',
+        url:'/air',
+        dataType: 'json',
+        async: true,
+        data:{
+                time:RequestTime
+             },
+        success : function (d){
+                    //console.log(d);
+                    AirData=eval('('+d+')');
                 }
-            })
-        }
-    });
+    })
 
     option=null;
 
@@ -35,7 +38,7 @@
             var value=data[i][pollution_name];
             if(value){
                 res.push({
-                    name:data[i].name,
+                    name:data[i]['name_chinese'],
                     value: [data[i]['longitude'],data[i]['latitude'],value]
                 });
             }
@@ -45,7 +48,7 @@
 
     option = {
         title: {
-            text: '部分城市城区空气质量 - 百度地图',
+            text: '京津地区部分城市城区空气质量 - 百度地图',
             left: 'center'
         },
         tooltip: {
@@ -172,7 +175,7 @@
                 name: 'PM2.5',
                 type: 'scatter',
                 coordinateSystem: 'bmap',
-                data: convertData(data,'PM25_Concentration'),
+                data: convertData(AirData,'PM25_Concentration'),
                 symbolSize: function (val) {
                     return 10;
                 },
@@ -196,7 +199,7 @@
                 name: 'PM10',
                 type: 'scatter',
                 coordinateSystem: 'bmap',
-                data: convertData(data,'PM10_Concentration'),
+                data: convertData(AirData,'PM10_Concentration'),
                 symbolSize: function (val) {
                     return 0;
                 },
@@ -210,7 +213,7 @@
                 name: 'NO2',
                 type: 'scatter',
                 coordinateSystem: 'bmap',
-                data: convertData(data,'NO2_Concentration'),
+                data: convertData(AirData,'NO2_Concentration'),
                 symbolSize: function (val) {
                     return 0;
                 },
@@ -224,7 +227,7 @@
                 name: 'CO',
                 type: 'scatter',
                 coordinateSystem: 'bmap',
-                data: convertData(data,'CO_Concentration'),
+                data: convertData(AirData,'CO_Concentration'),
                 symbolSize: function (val) {
                     return 0;
                 },
@@ -238,7 +241,7 @@
                 name: 'O3',
                 type: 'scatter',
                 coordinateSystem: 'bmap',
-                data: convertData(data,'O3_Concentration'),
+                data: convertData(AirData,'O3_Concentration'),
                 symbolSize: function (val) {
                     return 0;
                 },
@@ -252,7 +255,7 @@
                 name: 'SO2',
                 type: 'scatter',
                 coordinateSystem: 'bmap',
-                data: convertData(data,'SO2_Concentration'),
+                data: convertData(AirData,'SO2_Concentration'),
                 symbolSize: function (val) {
                     return 0;
                 },
