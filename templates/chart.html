@@ -8,6 +8,16 @@
 {% endblock %}
 
 {% block chartjs %}
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=qxRiPO1xrQcelt4nYzSbSX2ysdwiMteh"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+
 <script type="text/javascript">
     mapboxgl.accessToken ='pk.eyJ1IjoiY2l0eXdhbmRlciIsImEiOiJjamE4ODM2YjQwNDB5MzNwY2hvanV2eDhiIn0.QCJ3-UnEddwCuxg8uvhLcQ';
     var myChart = echarts.init(document.getElementById('chart'));
@@ -25,49 +35,50 @@
                 time:RequestTime
              },
         success : function (d){
-                    console.log(d);
+                    //console.log(d);
                     //AirData=eval('('+d+')');
+                    //console.log(d);
                     AirData=d;
-                }
-    })
-
-    option=null;
-
-    var convertData = function (data,pollution_name) {
-        var res = [];
-        for (var i=0;i<data.length;i++){
-            var value=data[i][pollution_name];
-            if(value){
-                res.push({
-                    name:data[i]['name_chinese'],
-                    value: [data[i]['longitude'],data[i]['latitude'],value]
-                });
-            }
-        }
-        return res;
-    };
-
-    option = {
-        title: {
-            text: '京津地区部分城市城区空气质量 - 百度地图',
-            left: 'center'
-        },
-        tooltip: {
-                trigger: 'item',
-                formatter: function(params) {
-                    var res = params.name+'<br/>';
-                    var myseries = option.series;
-                    for (var i = 0; i < myseries.length; i++) {
-                        for(var j=0;j<myseries[i].data.length;j++){
-                            if(myseries[i].data[j].name==params.name){
-                                res+=myseries[i].name +' : '+myseries[i].data[j].value[2]+'</br>';
-                            }
+                var convertData = function (data,pollution_name) {
+                    var res = [];
+                    console.log(pollution_name);
+                    console.log(data[0][pollution_name]);
+                    for (var i in data){
+                        var value=data[i][pollution_name];
+                        console.log(value);
+                        if(value){
+                            console.log("yes");
+                            res.push({
+                                name:data[i]['name_chinese'],
+                                value: [data[i]['longitude'],data[i]['latitude'],value]
+                             });
                         }
                     }
+                    console.log(res);
                     return res;
-                }
-            },
-        bmap: {
+                };
+                option=null;
+                      option = {
+                          title: {
+                                text: '京津地区部分城市城区空气质量 - 百度地图',
+                                left: 'center'
+                                },
+                          tooltip: {
+                            trigger: 'item',
+                            formatter: function(params) {
+                                var res = params.name+'<br/>';
+                                var myseries = option.series;
+                                for (var i = 0; i < myseries.length; i++) {
+                                    for(var j=0;j<myseries[i].data.length;j++){
+                                        if(myseries[i].data[j].name==params.name){
+                                            res+=myseries[i].name +' : '+myseries[i].data[j].value[2]+'</br>';
+                                        }
+                                    }
+                                }
+                                return res;
+                            }
+                         },
+                        bmap: {
             center: [116.173553,40.090679],
             zoom: 9,
             roam: true,
@@ -181,7 +192,7 @@
                     return 10;
                 },
                 label: {
-                    normal: {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+                    normal: {         
                         formatter: '{b}',
                         position: 'right',
                         show: true
@@ -273,7 +284,14 @@
     if (option && typeof option === "object") {
         myChart.setOption(option, true);
     }
-   
+                }
+    })
+    
+    option=null;
+
+ 
+  
+
 </script>
 
 
