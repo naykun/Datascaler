@@ -26,22 +26,6 @@
 
     var RequestTime=new Date(2014,4,1,0,0,0);
     
-    $.ajax({
-        type:'get',
-        url:'/air',
-        dataType: 'json',
-        async: true,
-        data:{
-                time:RequestTime
-             },
-        success : function (d){
-                    //console.log(d);
-                    AirData=d;
-                }
-    })
-
-    option=null;
-
     var convertData = function (data,pollution_name) {
         var res = [];
         for (var i in data){
@@ -56,232 +40,250 @@
         return res;
     };
 
-    option = {
-        title: {
-            text: '京津地区部分城市城区空气质量 - 百度地图',
-            left: 'center'
-        },
-        tooltip: {
-                trigger: 'item',
-                formatter: function(params) {
-                    var res = params.name+'<br/>';
-                    var myseries = option.series;
-                    for (var i = 0; i < myseries.length; i++) {
-                        for(var j=0;j<myseries[i].data.length;j++){
-                            if(myseries[i].data[j].name==params.name){
-                                res+=myseries[i].name +' : '+myseries[i].data[j].value[2]+'</br>';
-                            }
-                        }
-                    }
-                    return res;
-                }
-            },
-        bmap: {
-            center: [116.173553,40.090679],
-            zoom: 9,
-            roam: true,
-            mapStyle: {
-                styleJson: [{
-                    'featureType': 'water',
-                    'elementType': 'all',
-                    'stylers': {
-                        'color': '#d1d1d1'
-                    }
-                }, {
-                    'featureType': 'land',
-                    'elementType': 'all',
-                    'stylers': {
-                        'color': '#f3f3f3'
-                    }
-                }, {
-                    'featureType': 'railway',
-                    'elementType': 'all',
-                    'stylers': {
-                        'visibility': 'off'
-                    }
-                }, {
-                    'featureType': 'highway',
-                    'elementType': 'all',
-                    'stylers': {
-                        'color': '#fdfdfd'
-                    }
-                }, {
-                    'featureType': 'highway',
-                    'elementType': 'labels',
-                    'stylers': {
-                        'visibility': 'off'
-                    }
-                }, {
-                    'featureType': 'arterial',
-                    'elementType': 'geometry',
-                    'stylers': {
-                        'color': '#fefefe'
-                    }
-                }, {
-                    'featureType': 'arterial',
-                    'elementType': 'geometry.fill',
-                    'stylers': {
-                        'color': '#fefefe'
-                    }
-                }, {
-                    'featureType': 'poi',
-                    'elementType': 'all',
-                    'stylers': {
-                        'visibility': 'off'
-                    }
-                }, {
-                    'featureType': 'green',
-                    'elementType': 'all',
-                    'stylers': {
-                        'visibility': 'off'
-                    }
-                }, {
-                    'featureType': 'subway',
-                    'elementType': 'all',
-                    'stylers': {
-                        'visibility': 'off'
-                    }
-                }, {
-                    'featureType': 'manmade',
-                    'elementType': 'all',
-                    'stylers': {
-                        'color': '#d1d1d1'
-                    }
-                }, {
-                    'featureType': 'local',
-                    'elementType': 'all',
-                    'stylers': {
-                        'color': '#d1d1d1'
-                    }
-                }, {
-                    'featureType': 'arterial',
-                    'elementType': 'labels',
-                    'stylers': {
-                        'visibility': 'off'
-                    }
-                }, {
-                    'featureType': 'boundary',
-                    'elementType': 'all',
-                    'stylers': {
-                        'color': '#fefefe'
-                    }
-                }, {
-                    'featureType': 'building',
-                    'elementType': 'all',
-                    'stylers': {
-                        'color': '#d1d1d1'
-                    }
-                }, {
-                    'featureType': 'label',
-                    'elementType': 'labels.text.fill',
-                    'stylers': {
-                        'color': '#999999'
-                    }
-                }]
-            }
-        },
-        series : [
-            {
-                name: 'PM2.5',
-                type: 'scatter',
-                coordinateSystem: 'bmap',
-                data: convertData(AirData,'PM25_Concentration'),
-                symbolSize: function (val) {
-                    return 10;
-                },
-                label: {
-                    normal: {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
-                        formatter: '{b}',
-                        position: 'right',
-                        show: true
-                    },
-                    emphasis: {
-                        show: true
-                    }
-                },
-                itemStyle: {  
-                    normal: {
-                        color: 'purple'
-                    }
-                }
-            },
-            {
-                name: 'PM10',
-                type: 'scatter',
-                coordinateSystem: 'bmap',
-                data: convertData(AirData,'PM10_Concentration'),
-                symbolSize: function (val) {
-                    return 0;
-                },
-                itemStyle: {
-                    normal: {
-                        color: 'purple'
-                    }
-                }
-            },
-            {
-                name: 'NO2',
-                type: 'scatter',
-                coordinateSystem: 'bmap',
-                data: convertData(AirData,'NO2_Concentration'),
-                symbolSize: function (val) {
-                    return 0;
-                },
-                itemStyle: {
-                    normal: {
-                        color: 'purple'
-                    }
-                }
-            },
-            {
-                name: 'CO',
-                type: 'scatter',
-                coordinateSystem: 'bmap',
-                data: convertData(AirData,'CO_Concentration'),
-                symbolSize: function (val) {
-                    return 0;
-                },
-                itemStyle: {
-                    normal: {
-                        color: 'purple'
-                    }
-                }
-            },
-            {
-                name: 'O3',
-                type: 'scatter',
-                coordinateSystem: 'bmap',
-                data: convertData(AirData,'O3_Concentration'),
-                symbolSize: function (val) {
-                    return 0;
-                },
-                itemStyle: {
-                    normal: {
-                        color: 'purple'
-                    }
-                }
-            },
-            {
-                name: 'SO2',
-                type: 'scatter',
-                coordinateSystem: 'bmap',
-                data: convertData(AirData,'SO2_Concentration'),
-                symbolSize: function (val) {
-                    return 0;
-                },
-                itemStyle: {
-                    normal: {
-                        color: 'purple'
-                    }
-                }
-            }
-            
-        ]
-    };;
+    option=null;
+    
+    $.ajax({
+        type:'get',
+        url:'/air',
+        dataType: 'json',
+        async: true,
+        data:{
+                time:RequestTime
+             },
+        success : function (d){
+                    //console.log(d);
+                    AirData=d;
+                    option = {
+                                    title: {
+                                        text: '京津地区部分城市城区空气质量 - 百度地图',
+                                        left: 'center'
+                                    },
+                                    tooltip: {
+                                            trigger: 'item',
+                                            formatter: function(params) {
+                                                var res = params.name+'<br/>';
+                                                var myseries = option.series;
+                                                for (var i = 0; i < myseries.length; i++) {
+                                                    for(var j=0;j<myseries[i].data.length;j++){
+                                                        if(myseries[i].data[j].name==params.name){
+                                                            res+=myseries[i].name +' : '+myseries[i].data[j].value[2]+'</br>';
+                                                        }
+                                                    }
+                                                }
+                                                return res;
+                                            }
+                                        },
+                                    bmap: {
+                                        center: [116.173553,40.090679],
+                                        zoom: 9,
+                                        roam: true,
+                                        mapStyle: {
+                                            styleJson: [{
+                                                'featureType': 'water',
+                                                'elementType': 'all',
+                                                'stylers': {
+                                                    'color': '#d1d1d1'
+                                                }
+                                            }, {
+                                                'featureType': 'land',
+                                                'elementType': 'all',
+                                                'stylers': {
+                                                    'color': '#f3f3f3'
+                                                }
+                                            }, {
+                                                'featureType': 'railway',
+                                                'elementType': 'all',
+                                                'stylers': {
+                                                    'visibility': 'off'
+                                                }
+                                            }, {
+                                                'featureType': 'highway',
+                                                'elementType': 'all',
+                                                'stylers': {
+                                                    'color': '#fdfdfd'
+                                                }
+                                            }, {
+                                                'featureType': 'highway',
+                                                'elementType': 'labels',
+                                                'stylers': {
+                                                    'visibility': 'off'
+                                                }
+                                            }, {
+                                                'featureType': 'arterial',
+                                                'elementType': 'geometry',
+                                                'stylers': {
+                                                    'color': '#fefefe'
+                                                }
+                                            }, {
+                                                'featureType': 'arterial',
+                                                'elementType': 'geometry.fill',
+                                                'stylers': {
+                                                    'color': '#fefefe'
+                                                }
+                                            }, {
+                                                'featureType': 'poi',
+                                                'elementType': 'all',
+                                                'stylers': {
+                                                    'visibility': 'off'
+                                                }
+                                            }, {
+                                                'featureType': 'green',
+                                                'elementType': 'all',
+                                                'stylers': {
+                                                    'visibility': 'off'
+                                                }
+                                            }, {
+                                                'featureType': 'subway',
+                                                'elementType': 'all',
+                                                'stylers': {
+                                                    'visibility': 'off'
+                                                }
+                                            }, {
+                                                'featureType': 'manmade',
+                                                'elementType': 'all',
+                                                'stylers': {
+                                                    'color': '#d1d1d1'
+                                                }
+                                            }, {
+                                                'featureType': 'local',
+                                                'elementType': 'all',
+                                                'stylers': {
+                                                    'color': '#d1d1d1'
+                                                }
+                                            }, {
+                                                'featureType': 'arterial',
+                                                'elementType': 'labels',
+                                                'stylers': {
+                                                    'visibility': 'off'
+                                                }
+                                            }, {
+                                                'featureType': 'boundary',
+                                                'elementType': 'all',
+                                                'stylers': {
+                                                    'color': '#fefefe'
+                                                }
+                                            }, {
+                                                'featureType': 'building',
+                                                'elementType': 'all',
+                                                'stylers': {
+                                                    'color': '#d1d1d1'
+                                                }
+                                            }, {
+                                                'featureType': 'label',
+                                                'elementType': 'labels.text.fill',
+                                                'stylers': {
+                                                    'color': '#999999'
+                                                }
+                                            }]
+                                        }
+                                    },
+                                    series : [
+                                        {
+                                            name: 'PM2.5',
+                                            type: 'scatter',
+                                            coordinateSystem: 'bmap',
+                                            data: convertData(AirData,'PM25_Concentration'),
+                                            symbolSize: function (val) {
+                                                return 10;
+                                            },
+                                            label: {
+                                                normal: {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+                                                    formatter: '{b}',
+                                                    position: 'right',
+                                                    show: true
+                                                },
+                                                emphasis: {
+                                                    show: true
+                                                }
+                                            },
+                                            itemStyle: {  
+                                                normal: {
+                                                    color: 'purple'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            name: 'PM10',
+                                            type: 'scatter',
+                                            coordinateSystem: 'bmap',
+                                            data: convertData(AirData,'PM10_Concentration'),
+                                            symbolSize: function (val) {
+                                                return 0;
+                                            },
+                                            itemStyle: {
+                                                normal: {
+                                                    color: 'purple'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            name: 'NO2',
+                                            type: 'scatter',
+                                            coordinateSystem: 'bmap',
+                                            data: convertData(AirData,'NO2_Concentration'),
+                                            symbolSize: function (val) {
+                                                return 0;
+                                            },
+                                            itemStyle: {
+                                                normal: {
+                                                    color: 'purple'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            name: 'CO',
+                                            type: 'scatter',
+                                            coordinateSystem: 'bmap',
+                                            data: convertData(AirData,'CO_Concentration'),
+                                            symbolSize: function (val) {
+                                                return 0;
+                                            },
+                                            itemStyle: {
+                                                normal: {
+                                                    color: 'purple'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            name: 'O3',
+                                            type: 'scatter',
+                                            coordinateSystem: 'bmap',
+                                            data: convertData(AirData,'O3_Concentration'),
+                                            symbolSize: function (val) {
+                                                return 0;
+                                            },
+                                            itemStyle: {
+                                                normal: {
+                                                    color: 'purple'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            name: 'SO2',
+                                            type: 'scatter',
+                                            coordinateSystem: 'bmap',
+                                            data: convertData(AirData,'SO2_Concentration'),
+                                            symbolSize: function (val) {
+                                                return 0;
+                                            },
+                                            itemStyle: {
+                                                normal: {
+                                                    color: 'purple'
+                                                }
+                                            }
+                                        }
+                                        
+                                    ]
+                             };;
 
-    if (option && typeof option === "object") {
-        myChart.setOption(option, true);
-    }
+                    if (option && typeof option === "object") {
+                        myChart.setOption(option, true);
+                    }
+                }
+    })
+
+
+
    
 </script>
 
