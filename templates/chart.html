@@ -14,7 +14,7 @@
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=qxRiPO1xrQcelt4nYzSbSX2ysdwiMteh"></script>
+<script type="text/javascript" src=" http://api.map.baidu.com/getscript?v=2.0&ak=qxRiPO1xrQcelt4nYzSbSX2ysdwiMteh&services=&t=20180323171755"></script>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
 
@@ -26,7 +26,7 @@
     
     option=null;
     
-    var getChart = function(RequestTime){
+    var getScatterChart = function(RequestTime){
         $.ajax({
             type:'get',
             url:'air/',
@@ -36,7 +36,7 @@
                 time:RequestTime
             },
             success : function (data){
-                option=getOption(data,RequestTime);
+                option=getScatterOption(data,RequestTime);
                 if (option && typeof option === "object") {
                     myChart.setOption(option, true);
                 }
@@ -63,27 +63,26 @@
         return res;
     };
 
-    var getOption=function(data,time){
+    var getScatterOption=function(data,time){
         var res = {
             title: {
                 text: '京津地区部分城市城区空气质量图',
+                subtext:time,
                 left: 'center'
             },
             tooltip: {
                 trigger: 'item',
                 formatter: function(params) {
-                    var res = params.name+'<br/>';
-                    var myseries = option.series;
-                    for (var i = 0; i < myseries.length; i++) {
-                        for(var j=0;j<myseries[i].data.length;j++){
-                            if(myseries[i].data[j].name==params.name){
-                                res+=myseries[i].name +' : '+myseries[i].data[j].value[2]+'</br>';
-                            }
-                        }
-                    }
+                    var res=params.seriesName+'<br/>'+params.data.name+' : '+params.value[2]+'<br/>';
                     return res;
                 }
             },
+            legend: {  
+                orient: 'vertical',  
+                left: 'left',  
+                data:['PM2.5','PM10','NO2','CO','O3','SO2'],
+                selectedMode:"single",
+            },  
             bmap: {
                 center: [116.173553,40.090679],
                 zoom: 9,
@@ -201,7 +200,7 @@
                         normal: {         
                             formatter: '{b}',
                             position: 'right',
-                            show: true
+                            show: false
                         },
                         emphasis: {
                             show: true
@@ -219,7 +218,17 @@
                     coordinateSystem: 'bmap',
                     data: convertData(data,'PM10_Concentration'),
                     symbolSize: function (val) {
-                        return 0;
+                        return 10;
+                    },
+                    label: {
+                        normal: {         
+                            formatter: '{b}',
+                            position: 'right',
+                            show: false
+                        },
+                        emphasis: {
+                            show: true
+                        }
                     },
                     itemStyle: {
                         normal: {
@@ -233,7 +242,17 @@
                     coordinateSystem: 'bmap',
                     data: convertData(data,'NO2_Concentration'),
                     symbolSize: function (val) {
-                        return 0;
+                        return 10;
+                    },
+                    label: {
+                        normal: {         
+                            formatter: '{b}',
+                            position: 'right',
+                            show: false
+                        },
+                        emphasis: {
+                            show: true
+                        }
                     },
                     itemStyle: {
                         normal: {
@@ -247,7 +266,17 @@
                     coordinateSystem: 'bmap',
                     data: convertData(data,'CO_Concentration'),
                     symbolSize: function (val) {
-                        return 0;
+                        return 10;
+                    },
+                    label: {
+                        normal: {         
+                            formatter: '{b}',
+                            position: 'right',
+                            show: false
+                        },
+                        emphasis: {
+                            show: true
+                        }
                     },
                     itemStyle: {
                         normal: {
@@ -261,7 +290,17 @@
                     coordinateSystem: 'bmap',
                     data: convertData(data,'O3_Concentration'),
                     symbolSize: function (val) {
-                        return 0;
+                        return 10;
+                    },
+                    label: {
+                        normal: {         
+                            formatter: '{b}',
+                            position: 'right',
+                            show: false
+                        },
+                        emphasis: {
+                            show: true
+                        }
                     },
                     itemStyle: {
                         normal: {
@@ -275,7 +314,17 @@
                     coordinateSystem: 'bmap',
                     data: convertData(data,'SO2_Concentration'),
                     symbolSize: function (val) {
-                        return 0;
+                        return 10;
+                    },
+                    label: {
+                        normal: {         
+                            formatter: '{b}',
+                            position: 'right',
+                            show: false
+                        },
+                        emphasis: {
+                            show: true
+                        }
                     },
                     itemStyle: {
                         normal: {
@@ -288,7 +337,7 @@
         return res;
     }
 
-    getChart(DefaultTime);
+    getScatterChart(DefaultTime);
 
 </script>
 
