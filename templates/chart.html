@@ -14,7 +14,7 @@
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
-<script type="text/javascript" src=" http://api.map.baidu.com/getscript?v=2.0&ak=qxRiPO1xrQcelt4nYzSbSX2ysdwiMteh&services=&t=20180323171755"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&ak=qxRiPO1xrQcelt4nYzSbSX2ysdwiMteh&services=&t=20180323171755"></script>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
 
@@ -27,6 +27,7 @@
     option=null;
     
     var getScatterChart = function(RequestTime){
+        myChart.showLoading();
         $.ajax({
             type:'get',
             url:'air/',
@@ -38,11 +39,12 @@
             success : function (data){
                 option=getScatterOption(data,RequestTime);
                 if (option && typeof option === "object") {
+                    myChart.hideLoading();
                     myChart.setOption(option, true);
                 }
             }
-        })
-    }
+        });
+    };
     
     var convertData = function (data,pollution_name) {
         var res = [];
@@ -66,7 +68,7 @@
     var getScatterOption=function(data,time){
         var res = {
             title: {
-                text: '京津地区部分城市城区空气质量图',
+                text: '全国部分城市城区空气质量图',
                 subtext:time,
                 left: 'center'
             },
@@ -77,11 +79,22 @@
                     return res;
                 }
             },
-            legend: {  
+            legend: {
                 orient: 'vertical',  
                 left: 'left',  
                 data:['PM2.5','PM10','NO2','CO','O3','SO2'],
                 selectedMode:"single",
+            },
+            visualMap: {
+                left: 'right',
+                min: 0,
+                max: 500,
+                inRange: {
+                    color: ['green','yellow', 'red']
+                },
+                text:['High','Low'],
+                calculable: true,
+                realtime:true
             },  
             bmap: {
                 center: [116.173553,40.090679],
@@ -232,7 +245,7 @@
                     },
                     itemStyle: {
                         normal: {
-                            color: 'purple'
+                            color: 'blue'
                         }
                     }
                 },
@@ -256,7 +269,7 @@
                     },
                     itemStyle: {
                         normal: {
-                            color: 'purple'
+                            color: 'red'
                         }
                     }
                 },
@@ -280,7 +293,7 @@
                     },
                     itemStyle: {
                         normal: {
-                            color: 'purple'
+                            color: 'yellow'
                         }
                     }
                 },
@@ -304,7 +317,7 @@
                     },
                     itemStyle: {
                         normal: {
-                            color: 'purple'
+                            color: 'green'
                         }
                     }
                 },
@@ -328,14 +341,37 @@
                     },
                     itemStyle: {
                         normal: {
-                            color: 'purple'
+                            color: 'orange'
                         }
                     }
                 }
             ]
         }
         return res;
-    }
+    };
+
+    myChart.on('legendselectchanged', function(obj) {
+        if (option && typeof option === "object") {
+
+            if(obj.name === 'PM2.5'){
+                option.visualMap.max=500;
+            }else if(obj.name === 'PM10'){
+                option.visualMap.max=600;
+            }else if(obj.name === 'NO2'){
+                option.visualMap.max=3840;
+            }else if(obj.name === 'CO'){
+                option.visualMap.max=150;
+            }else if(obj.name === 'O3'){
+                option.visualMap.max=1200;
+            }else if(obj.name === 'SO2'){
+                option.visualMap.max=2620;
+            }
+            
+            option.legend.selected=obj.selected;
+
+            myChart.setOption(option, true);
+        }
+    });
 
     getScatterChart(DefaultTime);
 
