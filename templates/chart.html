@@ -1,14 +1,17 @@
 {% extends 'base.html' %}
 
 {% block grid %}
-    <div class="one column grid" style="margin:5px 0 5px 0;">
-        <form action="" method="GET">
-            <input id="date" /> 
-            <button id = "submit">submit</button>
-        </form>
-
+    <div>
+        <div style="margin:10px auto;width:500px">
+            <div class="ui action input">
+                <input id="date" placeholder="Search..." / style="width:270px">
+                <button class="ui icon button" id="submit">
+                        <i class="search icon"></i>
+                </button>
+            </div>
+        </div>
         <div class="column">
-            <div class="ui segment"  id="chart" style="margin:0 5px 0 40px;width: 1250px;height: 690px" ></div>
+            <div class="ui segment"  id="chart" style="margin:0 5px 0 50px;width: 1250px;height: 690px" ></div>
         </div>
        
     </div>
@@ -105,7 +108,7 @@
                 min: 0,
                 max: 500,
                 inRange: {
-                    color: ['green','yellow', 'red']
+                    color: ['green','yellow', 'red','#500000']
                 },
                 text:['High','Low'],
                 calculable: true,
@@ -448,6 +451,7 @@
         function(){
             $("#submit").click(function(e){
                 var str=$("#date").val();
+                console.log(str);
                 if(str!=''){
                     var time=new Date(str);
                     getScatterChart(time);
