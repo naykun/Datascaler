@@ -42,13 +42,24 @@ def process(month):
 #    return air_12h_id_date()
 
 def air(request):
+    print("SOME")
     air_date=request.GET.get("time").split(' ')
     air_date=air_date[3]+' '+process(air_date[1])+" "+air_date[2]+" "+air_date[4]
+    print(air_date)
+
+
     try:
-        id=request.GET.get("StationId")
-        return air_12h_id_date(id,air_date)
+        id=request.GET.get("station_id")
+        print(str(id)+"<----id")
+        if(id!=None):
+            print ("CASE1")
+            return air_12h_id_date(id,air_date)
+
     except:
         pass
+
+    print("CASE2")
+
     try :
         items=airquality.objects(time=air_date)
         return_items={}

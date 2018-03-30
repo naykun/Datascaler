@@ -529,18 +529,19 @@
     });
 
     ScatterChart.on('click',function(param){
+        //console.log(param);
         if(param.seriesName === 'PM2.5'){
-            getLineChart(param.station_id,NowTime,'PM25_Concentration');
+            getLineChart(param.data.station_id,NowTime,'PM25_Concentration');
         }else if(param.seriesName === 'PM10'){
-            getLineChart(param.station_id,NowTime,'PM10_Concentration');
+            getLineChart(param.data.station_id,NowTime,'PM10_Concentration');
         }else if(param.seriesName === 'NO2'){
-            getLineChart(param.station_id,NowTime,'NO2_Concentration');
+            getLineChart(param.data.station_id,NowTime,'NO2_Concentration');
         }else if(param.seriesName === 'CO'){
-            getLineChart(param.station_id,NowTime,'CO_Concentration');
+            getLineChart(param.data.station_id,NowTime,'CO_Concentration');
         }else if(param.seriesName === 'O3'){
-            getLineChart(param.station_id,NowTime,'O3_Concentration');
+            getLineChart(param.data.station_id,NowTime,'O3_Concentration');
         }else if(param.seriesName === 'SO2'){
-            getLineChart(param.station_id,NowTime,'SO2_Concentration');
+            getLineChart(param.data.station_id,NowTime,'SO2_Concentration');
         }
     });
 
@@ -591,6 +592,7 @@
             
             hourText: 'hour',
             
+
             currentText: 'now',
             closeText: 'ok',
             showSecond: false, //显示秒  
