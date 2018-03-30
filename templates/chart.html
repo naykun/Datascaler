@@ -412,10 +412,25 @@
         return res;
     };
 
+    var simplifyName = function(pollution_name){
+        if(pollution_name === 'PM25_Concentration'){
+            return 'PM2.5';
+        }else if(pollution_name === 'PM10_Concentration'){
+            return 'PM10';
+        }else if(pollution_name === 'NO2_Concentration'){
+           return 'NO2';
+        }else if(pollution_name === 'CO_Concentration'){
+            return 'CO';
+        }else if(pollution_name === 'O3_Concentration'){
+            return 'O3';
+        }else if(pollution_name === 'SO2_Concentration'){
+            return 'SO2';
+        }
+    }
     var getLineOption = function (data,time,pollution_name){
         var res={
             title: {
-                text: 'test' //data[0]['name_chinese']+' '+'12小时'+pollution_name+'变化图'
+                text: data[0+'']['name_chinese']+simplifyName(pollution_name)+'变化图'
             },
             tooltip: {
                 trigger: 'axis'
@@ -483,7 +498,7 @@
                 }
             },
             series: {
-                name: 'Beijing AQI',
+                name: simplifyName(pollution_name),
                 type: 'line',
                 data:convertLineData(data,pollution_name),
                 markLine: {
