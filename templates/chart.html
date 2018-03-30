@@ -2,16 +2,19 @@
 
 {% block grid %}
     <div>
-        <div style="margin:10px auto;width:500px">
-            <div class="ui action input">
-                <input id="date" placeholder="Search..." / style="width:270px">
-                <button class="ui icon button" id="submit">
-                        <i class="search icon"></i>
-                </button>
-            </div>
+        
+        <div class="column" style="float:left;width:60%">
+            <div class="ui segment"  id="ScatterChart" style="margin:0 5px 0 20px;height: 640px" ></div>
         </div>
-        <div class="column">
-            <div class="ui segment"  id="chart" style="margin:0 5px 0 50px;width: 1250px;height: 690px" ></div>
+
+        <div style="width:40%;float:left">
+            <div class="ui action input" style="margin-left:20px">
+                    <input id="date" placeholder="Search..." / style="width:270px">
+                    <button class="ui icon button" id="submit">
+                            <i class="search icon"></i>
+                    </button>
+            </div>
+            <div class="ui segment"  id="LineChart" style="margin:5px 20px 20px 20px;height: 600px" ></div>
         </div>
        
     </div>
@@ -39,14 +42,17 @@
 <script type="text/javascript">
 
     mapboxgl.accessToken ='pk.eyJ1IjoiY2l0eXdhbmRlciIsImEiOiJjamE4ODM2YjQwNDB5MzNwY2hvanV2eDhiIn0.QCJ3-UnEddwCuxg8uvhLcQ';
-    var myChart = echarts.init(document.getElementById('chart'));
+    var ScatterChart = echarts.init(document.getElementById('ScatterChart'));
+    var LineChart = echarts.init(document.getElementById('LineChart'));
 
     var DefaultTime=new Date(2014,5,1,0,0,0);
-    
-    option=null;
+    var NowTime = DefaultTime;
+    ScatterOption=null;
+    LineOption=null;
+
     
     var getScatterChart = function(RequestTime){
-        myChart.showLoading();
+        ScatterChart.showLoading();
         $.ajax({
             type:'get',
             url:'air/',
@@ -56,18 +62,42 @@
                 time:RequestTime
             },
             success : function (data){
+                NowTime=RequestTime;
+                
+                ScatterOption=getScatterOption(data,RequestTime);
 
-                option=getScatterOption(data,RequestTime);
+                if (ScatterOption && typeof ScatterOption === "object") {
+                    ScatterChart.hideLoading();
+                    ScatterChart.setOption(ScatterOption, true);
+                }
+            }
+        });
+    };
 
-                if (option && typeof option === "object") {
-                    myChart.hideLoading();
-                    myChart.setOption(option, true);
+    var getLineChart = function(StationId,RequestTime,pollution_name){
+        LineChart.showLoading();
+        $.ajax({
+            type:'get',
+            url:'air/',
+            dataType: 'json',
+            async: true,
+            data:{
+                station_id:StationId,
+                time:RequestTime
+            },
+            success : function (data){
+
+                LineOption= getLineOption(data,RequestTime,pollution_name);
+
+                if (LineOption && typeof LineOption === "object") {
+                    LineChart.hideLoading();
+                    LineChart.setOption(LineOption, true);
                 }
             }
         });
     };
     
-    var convertData = function (data,pollution_name) {
+    var convertScatterData = function (data,pollution_name) {
         var res = [];
         for (var i in data){
             var value=data[i][pollution_name];
@@ -76,8 +106,9 @@
                 console.log("yes");
                 res.push({
                     name:data[i]['name_chinese'],
-                    value: [data[i]['longitude'],data[i]['latitude'],value]
-                    });
+                    value: [data[i]['longitude'],data[i]['latitude'],value],
+                    station_id:data[i]['station_id']
+                });
             }
         }
         return res;
@@ -223,7 +254,7 @@
                     name: 'PM2.5',
                     type: 'scatter',
                     coordinateSystem: 'bmap',
-                    data: convertData(data,'PM25_Concentration'),
+                    data: convertScatterData(data,'PM25_Concentration'),
                     symbolSize: function (val) {
                         return 10;
                     },
@@ -247,7 +278,7 @@
                     name: 'PM10',
                     type: 'scatter',
                     coordinateSystem: 'bmap',
-                    data: convertData(data,'PM10_Concentration'),
+                    data: convertScatterData(data,'PM10_Concentration'),
                     symbolSize: function (val) {
                         return 10;
                     },
@@ -271,7 +302,7 @@
                     name: 'NO2',
                     type: 'scatter',
                     coordinateSystem: 'bmap',
-                    data: convertData(data,'NO2_Concentration'),
+                    data: convertScatterData(data,'NO2_Concentration'),
                     symbolSize: function (val) {
                         return 10;
                     },
@@ -295,7 +326,7 @@
                     name: 'CO',
                     type: 'scatter',
                     coordinateSystem: 'bmap',
-                    data: convertData(data,'CO_Concentration'),
+                    data: convertScatterData(data,'CO_Concentration'),
                     symbolSize: function (val) {
                         return 10;
                     },
@@ -319,7 +350,7 @@
                     name: 'O3',
                     type: 'scatter',
                     coordinateSystem: 'bmap',
-                    data: convertData(data,'O3_Concentration'),
+                    data: convertScatterData(data,'O3_Concentration'),
                     symbolSize: function (val) {
                         return 10;
                     },
@@ -343,7 +374,7 @@
                     name: 'SO2',
                     type: 'scatter',
                     coordinateSystem: 'bmap',
-                    data: convertData(data,'SO2_Concentration'),
+                    data: convertScatterData(data,'SO2_Concentration'),
                     symbolSize: function (val) {
                         return 10;
                     },
@@ -368,26 +399,148 @@
         return res;
     };
 
-    myChart.on('legendselectchanged', function(obj) {
-        if (option && typeof option === "object") {
+    var convertLineData = function (data,pollution_name){
+        var res=[];
+        for (var i=-6;i<=6;i++){
+            var value = data[i+''][pollution_name];
+            if(value){
+                res.push(value);
+            }else{
+                res.push(0);
+            }
+        }
+        return res;
+    };
+
+    var getLineOption = function (data,time,pollution_name){
+        var res={
+            title: {
+                text: 'test' //data[0]['name_chinese']+' '+'12小时'+pollution_name+'变化图'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                data:  (function(RequestTime){
+                    var res=[];
+                    for (var i=-6;i<=6;i++){
+                        res.push(new Date(new Date(RequestTime).getTime()+i*60*60*1000));
+                    }
+                    return res;
+                })(time),
+                axisLabel : {    
+                    show : true,    
+                    formatter: function(val){
+                        console.log(val);
+                        return new Date(val).getHours()+':00:00';
+                    }
+                }  
+            },
+            yAxis: {
+                splitLine: {
+                    show: false
+                }
+            },
+            toolbox: {
+                left: 'center',
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            visualMap: {
+                top: 10,
+                right: 10,
+                pieces: [{
+                    gt: 0,
+                    lte: 50,
+                    color: '#096'
+                }, {
+                    gt: 50,
+                    lte: 100,
+                    color: '#ffde33'
+                }, {
+                    gt: 100,
+                    lte: 150,
+                    color: '#ff9933'
+                }, {
+                    gt: 150,
+                    lte: 200,
+                    color: '#cc0033'
+                }, {
+                    gt: 200,
+                    lte: 300,
+                    color: '#660099'
+                }, {
+                    gt: 300,
+                    color: '#7e0023'
+                }],
+                outOfRange: {
+                    color: '#999'
+                }
+            },
+            series: {
+                name: 'Beijing AQI',
+                type: 'line',
+                data:convertLineData(data,pollution_name),
+                markLine: {
+                    silent: true,
+                    data: [{
+                        yAxis: 50
+                    }, {
+                        yAxis: 100
+                    }, {
+                        yAxis: 150
+                    }, {
+                        yAxis: 200
+                    }, {
+                        yAxis: 300
+                    }]
+                }
+            }
+        };
+        return res;
+    };
+
+    ScatterChart.on('legendselectchanged', function(obj) {
+        if (ScatterOption && typeof ScatterOption === "object") {
 
             if(obj.name === 'PM2.5'){
-                option.visualMap.max=500;
+                ScatterOption.visualMap.max=500;
             }else if(obj.name === 'PM10'){
-                option.visualMap.max=600;
+                ScatterOption.visualMap.max=600;
             }else if(obj.name === 'NO2'){
-                option.visualMap.max=3840;
+                ScatterOption.visualMap.max=3840;
             }else if(obj.name === 'CO'){
-                option.visualMap.max=150;
+                ScatterOption.visualMap.max=150;
             }else if(obj.name === 'O3'){
-                option.visualMap.max=1200;
+                ScatterOption.visualMap.max=1200;
             }else if(obj.name === 'SO2'){
-                option.visualMap.max=2620;
+                ScatterOption.visualMap.max=2620;
             }
             
-            option.legend.selected=obj.selected;
+            ScatterOption.legend.selected=obj.selected;
 
-            myChart.setOption(option, true);
+            ScatterChart.setScatterOption(ScatterOption, true);
+        }
+    });
+
+    ScatterChart.on('click',function(param){
+        if(param.seriesName === 'PM2.5'){
+            getLineChart(param.station_id,NowTime,'PM25_Concentration');
+        }else if(param.seriesName === 'PM10'){
+            getLineChart(param.station_id,NowTime,'PM10_Concentration');
+        }else if(param.seriesName === 'NO2'){
+            getLineChart(param.station_id,NowTime,'NO2_Concentration');
+        }else if(param.seriesName === 'CO'){
+            getLineChart(param.station_id,NowTime,'CO_Concentration');
+        }else if(param.seriesName === 'O3'){
+            getLineChart(param.station_id,NowTime,'O3_Concentration');
+        }else if(param.seriesName === 'SO2'){
+            getLineChart(param.station_id,NowTime,'SO2_Concentration');
         }
     });
 
@@ -460,6 +613,7 @@
     });
 
     getScatterChart(DefaultTime);
+    getLineChart(1001,DefaultTime,'PM25_Concentration');
 
 </script>
 
