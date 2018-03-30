@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from datascaler_web.models import *
 from django.http import JsonResponse
@@ -10,7 +11,15 @@ def index(request):
 def chart(request):
     return render(request,"chart.html")
 def doc(request):
-    return render(request,"doc.html")
+    limit = 10
+    cities = city.objects.all()
+    paginator = Paginator(cities,limit)
+    page = request.GET.get('page',1)
+    loaded = paginator.page(page)
+    context = {
+        'ItemInfo':loaded
+    }
+    return render(request,"doc.html",context)
 def process(month):
     if month=="Jan":
         return '1'
