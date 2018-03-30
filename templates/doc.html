@@ -36,17 +36,29 @@
                 <div class="item">
                   <div class="content">
                     <a class="header">
-                      {{ item.title }}
+                      {{ item.city_id }}
                     </a>
                     <div class="description">
-                      {{ item.area}}
+                      {{ item.name_chinese}}  {{ item.name_english}}
                     </div>
+{#                      <div class="description">#}
+{#                      {{ item.name_english}}#}
+{#                    </div>#}
                     <div class="extra">
-                    {% for tag in item.cates %}
-                      <div class="ui label">
-                        {{ tag }}
-                      </div>
-                    {% endfor %}
+{#                    {% for tag in item.cates %}#}
+{#                      <div class="ui label">#}
+{#                        {{ tag }}#}
+{#                      </div>#}
+{#                    {% endfor %}#}
+                        <div class="ui label">
+                            经度：{{ item.longitude }}
+                        </div>
+                        <div class="ui label">
+                            纬度：{{ item.latitude }}
+                        </div>
+                        <div class="ui label">
+                            集群id：{{ item.cluster_id }}
+                        </div>
                     </div>
 
                   </div>

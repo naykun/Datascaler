@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from datascaler_web.models import *
 from django.http import JsonResponse
@@ -10,7 +11,15 @@ def index(request):
 def chart(request):
     return render(request,"chart.html")
 def doc(request):
-    return render(request,"doc.html")
+    limit = 10
+    cities = city.objects.all()
+    paginator = Paginator(cities,limit)
+    page = request.GET.get('page',1)
+    loaded = paginator.page(page)
+    context = {
+        'ItemInfo':loaded
+    }
+    return render(request,"doc.html",context)
 def process(month):
     if month=="Jan":
         return '1'
@@ -42,13 +51,24 @@ def process(month):
 #    return air_12h_id_date()
 
 def air(request):
+    print("SOME")
     air_date=request.GET.get("time").split(' ')
     air_date=air_date[3]+' '+process(air_date[1])+" "+air_date[2]+" "+air_date[4]
+    print(air_date)
+
+
     try:
-        id=request.GET.get("StationId")
-        return air_12h_id_date(id,air_date)
+        id=request.GET.get("station_id")
+        print(str(id)+"<----id")
+        if(id!=None):
+            print ("CASE1")
+            return air_12h_id_date(id,air_date)
+
     except:
         pass
+
+    print("CASE2")
+
     try :
         items=airquality.objects(time=air_date)
         return_items={}
