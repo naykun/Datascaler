@@ -11,7 +11,7 @@ def index(request):
 def chart(request):
     return render(request,"chart.html")
 def doc(request):
-    limit = 10
+    limit = 5
     cities = city.objects.all()
     paginator = Paginator(cities,limit)
     page = request.GET.get('page',1)
