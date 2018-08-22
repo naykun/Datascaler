@@ -5,6 +5,11 @@ from django.http import JsonResponse
 import json
 import re
 from datetime import datetime, timedelta
+import cgi
+from mongoengine import *
+from models import *
+
+
 # Create your views here.
 def index(request):
     return render(request,"index.html")
@@ -113,7 +118,13 @@ def air_12h_id_date(id,date):
 
     #return air_all_time
     return JsonResponse(air_all_time)
-
+    
+def handleUploadedFile(request):
+    form = cgi.FieldStorage()
+    file = form.getvalue('myfile')
+    stationID = form.getvalue('stationID')
+    connect('datascaler')
+    image.objects.insert([stationID,file])
 
 
 

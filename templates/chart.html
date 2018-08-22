@@ -13,6 +13,11 @@
                     <button class="ui icon button" id="submit">
                             <i class="search icon"></i>
                     </button>
+                    <form enctype="multipart/form-data" method="post" action="upload/">
+                       <input id="fileupload" name="myfile" type="file" />
+                       <input id="stationID" name="stationID" type="text" />
+                       <input type="submit" value="submit" id="submit" />
+                    </form>
             </div>
             <div class="ui segment"  id="LineChart" style="margin:5px 20px 20px 20px;height: 600px" ></div>
         </div>

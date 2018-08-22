@@ -50,7 +50,9 @@ class weatherforecast(Document):
     bottom_temperature=FloatField(null=True)
     wind_level=FloatField(null=True)
     wind_direction=IntField(null=True)
-
+class image(Document):
+    station_id=IntField(null=True)
+    image=FileField(null=True)
 
     
 
