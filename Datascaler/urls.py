@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^chart/$',chart),
     url(r'^doc/$',doc),
     url(r'^chart/air/',air),
+    url(r'^chart/upload/',handleUploadedFile),
 ]
